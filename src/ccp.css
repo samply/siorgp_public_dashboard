@@ -1,0 +1,234 @@
+/*comment in for npm package usage*/
+/* @import "../../../node_modules/@samply/lens/dist/style.css"; */
+/* @import "../../lib/src/styles/index.css"; */
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  src: url('../fonts/Open_Sans/OpenSans-VariableFont_wdth\,wght.ttf') format('truetype');
+}
+
+:root {
+  --white: #ffffff;
+  --ghost-white: #f8f8ff;
+  --black: #000000;
+  --gray: #a7a7a7;
+  --light-gray: #dee2e6;
+  --lightest-gray: #efefef;
+  --dark-gray: #323232;
+  --blue: #007bff;
+  --light-blue: #007bff;
+  --lightest-blue: #adc7f3;
+  --dark-blue: #002d80;
+  --green: #00882d;
+  --light-green: #00b33c;
+  --dark-green: #00591a;
+  --red: #b90000;
+  --light-red: #ff0000;
+  --dark-red: #800000;
+  --orange: #e95713;
+  --light-orange: #ffa750;
+
+  --border-radius-small: 5px;
+
+  --gap-xxs: 5px;
+  --gap-xs: 10px;
+  --gap-s: 20px;
+  --gap-m: 30px;
+  --gap-l: 40px;
+  --gap-xl: 50px;
+  --gap-xxl: 60px;
+
+  --font-size-xxs: 10px;
+  --font-size-xs: 12px;
+  --font-size-s: 14px;
+  --font-size-m: 16px;
+  --font-size-l: 18px;
+  --font-size-xl: 24px;
+  --font-size-xxl: 32px;
+
+  --font-family: 'Open Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+  background-color: var(--ghost-white);
+  font-family: var(--font-family);
+  font-size: var(--font-size-l);
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border-radius: var(--border-radius-small);
+}
+
+header {
+  background-color: var(--ghost-white);
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  padding: var(--gap-xs);
+}
+
+.header-wrapper {
+  background-color: var(--white);
+  padding: var(--gap-xs);
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-radius: var(--border-radius-small);
+  border: solid 1px var(--lightest-gray);
+}
+
+.logo img {
+  height: 40px;
+}
+
+.logo-dkfz {
+  justify-self: end;
+}
+
+.logo-dkfz img {
+  height: 30px;
+}
+
+header h1 {
+  text-align: center;
+  font-size: var(--font-size-xxl);
+  font-weight: lighter;
+  color: var(--blue);
+  margin: 0;
+}
+
+.cards-grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: var(--gap-s);
+  padding: var(--gap-xs);
+  margin: 0 var(--gap-xs);
+  border-radius: var(--border-radius-small);
+  border: solid 1px var(--lightest-gray);
+  background-color: var(--white);
+}
+
+#card1, #card2, #card3, #card4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: var(--border-radius-small);
+  background-color: var(--white);
+}
+
+#dashWrapper {  
+  justify-items: center;
+  text-align: center;  
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-gap: var(--gap-s);
+  border-radius: var(--border-radius-small);    
+  padding: var(--gap-xs);
+  align-items: stretch;
+}
+
+.chartWrapper {
+  width: 100%;
+  border-radius: var(--border-radius-small);
+  border: solid 1px var(--lightest-gray);
+  background-color: var(--white);
+  align-items: center;
+  justify-content: center;
+}
+
+#chartsTopRow {    
+  display: grid;
+  justify-items: center;  
+  align-items: stretch;
+  grid-template-columns: 33% 33% 33%;   
+}
+
+#chartsBottomRow {  
+  display: grid;  
+  justify-items: center;
+  align-items: stretch;
+  grid-template-columns: repeat(4, 25%);  
+}
+
+.barChart, .pieChart {
+  width: 80%;
+  height: 100%;
+  background-color: var(--white);
+  /*
+  border-radius: var(--border-radius-small);    
+  border: solid 1px var(--lightest-gray);  
+  */
+}
+
+.barChart canvas, .pieChart canvas {
+  max-height: 400px;
+  width: 100%;
+}
+
+@media screen and (max-width: 1200px) {
+  .charts {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .chart-age-distribution {
+    grid-row: 3/4;
+    grid-column: 2/4;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+
+  .grid {
+    display: grid;
+    grid-gap: var(--gap-m);
+  }
+
+  .catalogue {
+    position: static;
+    max-width: 100% !important;
+    width: 100%;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .catalogue button {
+    display: none;
+  }
+
+  .charts {
+    margin-left: 0px;
+  }
+
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  padding: var(--gap-xs);
+  background-color: var(--white);
+  border-radius: var(--border-radius-small);
+  border: solid 1px var(--lightest-gray);
+  margin: 0 var(--gap-xs)
+}
+
+footer a {
+  color: var(--blue);
+  padding: 0 var(--gap-xs);
+  border-right: solid 1px var(--blue);
+
+}
+
+.imprint {
+  border-right: none;
+}
+

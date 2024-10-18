@@ -8,7 +8,7 @@ export function initPatientsByProjectBarChart() {
         data: {
           labels: ['MetPredict', 'NeoMatch'],
           datasets: [
-            {data: [10, 10], label: 'Project'}
+            {data: [10, 10], label:'Count'}
           ]
         },
         type: 'bar',
@@ -102,7 +102,7 @@ export function initPatientsByProjectBarChart() {
         data: {        
           labels: ['NeoMatch', 'MetPredict'],
           datasets: [
-            {data: [10, 10], label: 'Projects'}
+            {data: [10, 10], label: 'Count'}
           ]
         },
         type: 'bar',

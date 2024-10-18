@@ -1,2 +1,2 @@
 # siorgp_internal_dashboard
-A internal dashboard for the Organoid platform
+A public dashboard for the Organoid platform

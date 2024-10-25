@@ -8,11 +8,11 @@ export function initPatientsByProjectBarChart() {
         data: {
           labels: ['MetPredict', 'NeoMatch'],
           datasets: [
-            {data: [10, 10], label:'Count'}
+            {data: [10, 10]}
           ]
         },
         type: 'bar',
-        options: {        
+        options: {          
           responsive: true,
           maintainAspectRatio: true,
           indexAxis: 'x',
@@ -29,8 +29,11 @@ export function initPatientsByProjectBarChart() {
                 text: 'Age'
               }
             }
-          },
+          },              
           plugins: {
+            legend: {
+              display: false
+            },        
             tooltip: {            
               callbacks: {
                 label: function(context) {
@@ -78,6 +81,9 @@ export function initPatientsByProjectBarChart() {
             }
           },
           plugins: {
+            legend: {
+              display: false
+            },     
             tooltip: {            
               callbacks: {
                 label: function(context) {
@@ -125,6 +131,9 @@ export function initPatientsByProjectBarChart() {
             }
           },
           plugins: {
+            legend: {
+              display: false
+            },     
             tooltip: {            
               callbacks: {
                 label: function(context) {
@@ -211,7 +220,7 @@ export function initPatientsByProjectBarChart() {
     if (ctx) {
       new Chart(ctx, {      
         data: {
-          labels: ['after neoCX', 'before neoCX', 'before/after neoCX'],
+          labels: ['m PDOs', 'n PDOs', 'o PDOs'],
           datasets: [
             {data: [1, 1, 1], label: 'Count'}          
           ]

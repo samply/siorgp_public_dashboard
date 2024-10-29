@@ -1,4 +1,4 @@
-import { Status } from 'gridjs/dist/src/types';
+import { updateDashboard } from "./main";
 
 export type ResponseStatus = "claimed" | "succeeded" | "tempfailed" | "permfailed";
 
@@ -10,6 +10,24 @@ export type BeamResult = {
     task: string;
     to: string[];
 };
+
+export type FieldProjectVal = {
+    field: string,
+    project: string,
+    value: number
+}
+
+export function responseBodyToMap(responseBody: Array<FieldProjectVal>): Map<string, number | string> {
+    const fieldMap = new Map<string, number | string>();
+
+    fieldMap.set("project", responseBody[0].project);
+
+    responseBody.forEach((fieldProjectVal) => {
+        fieldMap.set(fieldProjectVal.field, fieldProjectVal.value);
+    });
+
+    return fieldMap;
+}
 
 export class Spot {
     private currentTask!: string;
@@ -39,7 +57,7 @@ export class Spot {
                         "Content-Type": "application/json",
                     },
                     //credentials: import.meta.env.PROD ? "include" : "omit",
-                    credentials: process.env.PROD ? "include" : "omit",
+                    credentials: "omit",                    
                     body: JSON.stringify({
                         id: this.currentTask,
                         sites: this.sites,
@@ -71,28 +89,19 @@ export class Spot {
             eventSource.addEventListener("new_result", (message) => {
                 const response: BeamResult = JSON.parse(message.data);
                 if (response.task !== this.currentTask) return;
+                console.log(response);
                 const site: string = response.from.split(".")[1];
                 const res_status: ResponseStatus = response.status;
-                /*
-                const res_body: ResponseBody =
-                    res_status === "succeeded"
-                        ? JSON.parse(atob(response.body))
-                        : null;
                 
-                const parsedResponse: ResponseStore = {
-                    site: site,
-                    response: {
-                        status: res_status,
-                        data: res_body,
-                    }
-                };
-                updateTable(parsedResponse);
-                */
+                if (res_status === "succeeded") {
+                    const res_body: Array<FieldProjectVal> = JSON.parse(atob(response.body));
+                    updateDashboard(responseBodyToMap(res_body));
+                }
             });
 
             // read error events from beam
             eventSource.addEventListener("error", (message) => {
-                console.error(`Beam returned error ${message}`);
+                //console.error(`Beam returned error ${message}`);
                 eventSource.close();
             });
 

@@ -1,8 +1,8 @@
 import { Spot, ResponseStatus } from './spot';
 import * as chartInits from './initCharts';
 
-import { Chart, ChartData, BarController, BarElement, CategoryScale, 
-  LinearScale, Tooltip, PieController, ArcElement, Legend, LegendElement} from 'chart.js';
+import { Chart, ChartTypeRegistry, BarController, BarElement, CategoryScale, 
+  LinearScale, Tooltip, PieController, ArcElement, Legend } from 'chart.js';
 
 export const colors = {
   white: '#ffffff',
@@ -26,95 +26,266 @@ export const colors = {
   lightOrange: '#ffa750',
 };
 
-export type ResponseStore = {site: string, response: PatientsResponse | OrganoidsResponse};
-let patientsResponses: Array<ResponseStore> = [];
+interface CData {
+  labels: string[];
+  datasets: {
+    data: number[];
+  }[];
+}
 
-/* patient statistics focused query
-site
-project
-gender
-count_age_lt_30
-count_age_in_31_to_40
-count_age_in_41_to_50
-count_age_in_51_to_60
-count_age_gt_61
-*/
-//@todo: calculate count male/female/other total
-export type PatientsResponse = {
+function objectToChartData(obj: object): CData {
+  const labels = Object.keys(obj);
+  const data = Object.values(obj);
+
+  return {
+    labels,
+    datasets: [
+      {
+        data,
+      },
+    ],
+  };
+}
+
+let patientsByProjectBarChart: Chart<keyof ChartTypeRegistry, number[], string> | null;
+let organoidsByProjectBarChart: Chart<keyof ChartTypeRegistry, number[], string> | null;
+let patientsByAgeBarChart: Chart<keyof ChartTypeRegistry, number[], string> | null;
+let organoidsByBiopsySitePieChart: Chart<keyof ChartTypeRegistry, number[], string> | null;
+let patientsByGenderPieChart: Chart<keyof ChartTypeRegistry, number[], string> | null;
+let metPPatientsByPdosPieChart: Chart<keyof ChartTypeRegistry, number[], string> | null;
+let neoMPatientsByTherapyStatusPieChart: Chart<keyof ChartTypeRegistry, number[], string> | null;
+
+// card values
+export type CardRowData = {
+  successfullSiteResponses: number,
+  projectsSeen: Set<string>,
+  nProjects: number,
+  nPatients: number,
+  nOrganoids: number
+};
+
+let crd: CardRowData = {
+  projectsSeen: new Set([]),
+  nProjects: 0,
+  nPatients: 0,
+  nOrganoids: 0,
+  successfullSiteResponses: 0
+}
+
+let patientsByProject = {
+  MetPredict: 0,
+  NeoMatch: 0
+}
+
+let organoidsByProject = {
+  MetPredict: 0,
+  NeoMatch: 0
+}
+
+let patientsByAge = {
+  "<=30": 0,
+  "31-40": 0,
+  "41-50": 0,
+  "51-60": 0,
+  ">=61": 0
+}
+
+let organoidsByBiopsySite = {
+  Metastasis: 0,
+  "Untreated Primary Tumor": 0,
+  "Treated Tumor": 0
+}
+
+let patientsByGender = {
+  Male: 0,
+  Female: 0
+}
+
+let metPPatientsByPdos = {
+  "pat_pdos_leq_3": 0,
+  "pat_pdos_4": 0,
+  "pat_pdos_5": 0,
+  "pat_pdos_gt_5": 0
+}
+
+/*
+let neoMPatientsByTherapyStatus = {
+  "after neoCX": 0,
+  "before neoCX": 0,
+  "before/after neoCX": 0
+}
+*/  
+
+// patient and organoid focused query
+export type SiteResponse = {
   status: ResponseStatus, data: {
     date: string, responseDetails: [{
-        site: string, 
         project:string, 
-        gender: string,
-        count_age_lt_30: number, 
-        count_age_in_31_to_40: number,
-        count_age_in_41_to_50: number,
-        count_age_in_51_to_60: number,
-        count_age_gt_61: number            
+        field: string,
+        value: number
     }]
   }
 };
 
-/* organoid centric query
-count_organoids
-project
-//@todo extend with
-from_untreated_primary_tumor
-from_treated_primary_tumor
-from_metastasis
-*/
-export type OrganoidsResponse = {
-  status: ResponseStatus, data: {
-      date: string, responseDetails: [{
-          count_organoids: number, 
-          project: string
-      }]
-  }
-};
-
-
-// Create a new Spot instance
-/*
-const url = new URL('');
-const sites = [''];
-const spot = new Spot(url, sites);
-
-const payload = JSON.stringify({ payload: "SELECT_TABLES" });
-const query = btoa(payload);
-
-// Create an AbortController to cancel the request if needed
-const controller = new AbortController();
-
-// Send the query
-spot.send(query, controller).then(() => {
-  console.log('Query sent successfully');
-}).catch((err) => {
-  console.error('Error sending query:', err);
-});
-*/
-
 //init all visual elements with blank/default initial values
 function initBlank() {
+  patientsByProjectBarChart = chartInits.initPatientsByProjectBarChart() ?? null;
+  organoidsByProjectBarChart = chartInits.initOrganoidsByProjectBarChart() ?? null;
+  patientsByAgeBarChart = chartInits.initPatientsByAgeBarChart() ?? null;
+  organoidsByBiopsySitePieChart = chartInits.initOrganoidsByBiopsySitePieChart() ?? null;
+  patientsByGenderPieChart = chartInits.initPatientsByGenderPieChart() ?? null;
+  metPPatientsByPdosPieChart = chartInits.initMetPPatientsByPdosPieChart() ?? null;
+  neoMPatientsByTherapyStatusPieChart = chartInits.initNeoMPatientsByTherapyStatusPieChart() ?? null;
+}
 
+function updateCardRow(crd: CardRowData) {
+  const card1 = document.getElementById('card1');
+  const card2 = document.getElementById('card2');
+  const card3 = document.getElementById('card3');
+  const card4 = document.getElementById('card4');
+
+  if (card1 && card2 && card3 && card4) {
+    card1.querySelector('h2')!.innerHTML = `<b>${crd.successfullSiteResponses}/3</b>`;
+    card2.querySelector('h2')!.innerHTML = `<b>${crd.nProjects}</b>`;
+    card3.querySelector('h2')!.innerHTML = `<b>${crd.nPatients}</b>`;
+    card4.querySelector('h2')!.innerHTML = `<b>${crd.nOrganoids}</b>`;
+  }
 }
 
 window.addEventListener('load', () => {  
   Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip,
     PieController, ArcElement, Legend
-  );
-  chartInits.initPatientsByProjectBarChart();
-  chartInits.initOrganoidsByProjectBarChart();
-  chartInits.initPatientsByAgeBarChart();
-  chartInits.initOrganoidsByBiopsySitePieChart();
-  chartInits.initPatientsByGenderPieChart();
-  chartInits.initMetPPatientsAfterPdoPieChart();
-  chartInits.initNeoMPatientsByTherapyStatusPieChart();
+  );  
+  initBlank();
 
 
-  /*
-  renderPatientsBarChart(patientsBarChartDatasets);
-  initPatientsByProjectPieChart();
-  initPatientsBySitePieChart();
-  initOrganoidsBySitePieChart();
-  */
+  //############################ query site data ###############################
+  // Create a new Spot instance
+  
+  const url = new URL('https://organoid.ccp-it.dktk.dkfz.de/');
+  const sites = ['dresden'];
+  const spot = new Spot(url, sites);
+
+  const payload = JSON.stringify({ payload: "SIORGP_PUBLIC_MAIN" });
+  const query = btoa(payload);
+
+  // Create an AbortController to cancel the request if needed
+  const controller = new AbortController();
+
+  // Send the query
+  spot.send(query, controller).then(() => {
+    console.log('Query sent');
+  }).catch((err) => {
+    console.error('Error sending query:', err);
+  }); 
 });
+
+export function updateDashboard(res_map: Map<string, number | string>) {
+  console.log(res_map);
+  
+  let project = String(res_map.get("project"));
+  // update card row
+  crd.successfullSiteResponses += 1;
+  crd.nOrganoids += Number(res_map.get("n_organoids") ?? 0);
+  crd.nPatients += Number(res_map.get("n_patients") ?? 0);
+  crd.projectsSeen.add(project);
+  crd.nProjects = crd.projectsSeen.size;
+  updateCardRow(crd);
+
+  //update patientsByProject
+  if (project == "MetPredict") {
+    patientsByProject.MetPredict += Number(res_map.get("n_patients") ?? 0);
+  } else if (project == "NeoMatch") {
+    patientsByProject.NeoMatch += Number(res_map.get("n_patients") ?? 0);
+  }
+  if (patientsByProjectBarChart) {
+    patientsByProjectBarChart.data = objectToChartData(patientsByProject);
+    patientsByProjectBarChart.data.datasets[0].backgroundColor = [
+      colors.lightBlue, // color for MetPredict
+      colors.lightGreen, // color for NeoMatch
+    ];
+    patientsByProjectBarChart.update();
+  }
+
+  //update organoidsByProject
+  if (project == "MetPredict") {
+    organoidsByProject.MetPredict += Number(res_map.get("n_organoids") ?? 0);
+  } else if (project == "NeoMatch") {
+    organoidsByProject.NeoMatch += Number(res_map.get("n_organoids") ?? 0);
+  }
+  if (organoidsByProjectBarChart) {    
+    organoidsByProjectBarChart.data = objectToChartData(organoidsByProject);
+    organoidsByProjectBarChart.data.datasets[0].backgroundColor = [
+      colors.lightBlue, // color for MetPredict
+      colors.lightGreen, // color for NeoMatch
+    ];
+    organoidsByProjectBarChart.update();
+  }
+
+  //update patientsByAge 
+  patientsByAge['<=30'] += Number(res_map.get("<=30") ?? 0);
+  patientsByAge['31-40'] += Number(res_map.get("31-40") ?? 0);
+  patientsByAge['41-50'] += Number(res_map.get("41-50") ?? 0);
+  patientsByAge['51-60'] += Number(res_map.get("51-60") ?? 0);
+  patientsByAge['>=61'] += Number(res_map.get(">=61") ?? 0);
+
+  if (patientsByAgeBarChart) {
+    patientsByAgeBarChart.data = objectToChartData(patientsByAge);;
+    patientsByAgeBarChart.data.datasets[0].backgroundColor = [
+      colors.blue, 
+      colors.green,
+      colors.orange,
+      colors.red,
+      colors.gray
+    ]
+    patientsByAgeBarChart.update();
+  }
+
+  //update patientsByGender
+  patientsByGender.Female += Number(res_map.get("gender_female") ?? 0);
+  patientsByGender.Male += Number(res_map.get("gender_male") ?? 0);
+
+  if (patientsByGenderPieChart) {
+    patientsByGenderPieChart.data = objectToChartData(patientsByGender);
+    patientsByGenderPieChart.data.datasets[0].backgroundColor = [
+      colors.blue,
+      colors.green,
+    ]
+    patientsByGenderPieChart.update();
+  }
+
+
+  //update organoidsByBiopsieSite
+  if (project == "MetPredict") {
+    //MetPredict Organoids are always taken from a Metastasis
+    organoidsByBiopsySite.Metastasis += Number(res_map.get("n_organoids") ?? 0);
+  }
+  if (organoidsByBiopsySitePieChart) {
+    organoidsByBiopsySitePieChart.data = objectToChartData(organoidsByBiopsySite);;
+    organoidsByBiopsySitePieChart.data.datasets[0].backgroundColor = [
+      colors.blue, 
+      colors.green,
+      colors.orange
+    ]
+    organoidsByBiopsySitePieChart.update();
+  }
+  
+  //update metPPatientsByPDOs
+  metPPatientsByPdos["pat_pdos_leq_3"] += Number(res_map.get("pat_pdos_leq_3") ?? 0); 
+  metPPatientsByPdos["pat_pdos_4"] += Number(res_map.get("pat_pdos_4") ?? 0); 
+  metPPatientsByPdos["pat_pdos_5"] += Number(res_map.get("pat_pdos_5") ?? 0); 
+  metPPatientsByPdos["pat_pdos_gt_5"] += Number(res_map.get("pat_pdos_gt_5") ?? 0); 
+
+  if (metPPatientsByPdosPieChart) {
+    metPPatientsByPdosPieChart.data = objectToChartData(metPPatientsByPdos);
+    metPPatientsByPdosPieChart.data.labels = ['<=3 PDOs', '4 PDOs', '5 PDOs', '>5 PDOs'];
+    metPPatientsByPdosPieChart.data.datasets[0].backgroundColor = [
+      colors.blue, 
+      colors.green,
+      colors.orange,
+      colors.gray
+    ]
+    metPPatientsByPdosPieChart.update();
+  }
+  //@todo: add neoMPatientsByTherapyStatus
+}

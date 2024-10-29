@@ -1,271 +1,127 @@
-import { Chart, ChartData } from 'chart.js';
-  
+import { Chart, ChartData, ChartOptions as ChartJsOptions } from 'chart.js';
+
+interface ChartOptions {
+  type: 'bar' | 'pie';
+  labels: string[];
+  data: number[];
+  titleX?: string;
+  titleY?: string;
+}
+
+function createChart(canvasId: string, options: ChartOptions) {
+  const ctx = document.getElementById(canvasId) as HTMLCanvasElement;
+  if (!ctx) {
+    console.log(`Element with id '${canvasId}' not found`);
+    return;
+  }
+
+  const chartOptions: ChartJsOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context: any) {
+            let label = context.dataset.label || '';
+            let value = context.formattedValue;
+            return `${label}: ${value}`;
+          }
+        }
+      }
+    }
+  };
+
+  if (options.type === 'bar') {
+    chartOptions.indexAxis = 'x';
+    chartOptions.scales = {
+      y: {
+        title: {
+          display: true,
+          text: options.titleY
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: options.titleX
+        }
+      }
+    };
+  }
+
+  return new Chart(ctx, {
+    type: options.type,
+    data: {
+      labels: options.labels,
+      datasets: [
+        { data: options.data }
+      ]
+    },
+    options: chartOptions
+  });
+}
 
 export function initPatientsByProjectBarChart() {
-    const ctx = document.getElementById('patientsByProjectBarChartCanvas') as HTMLCanvasElement;  
-    if (ctx) {
-      new Chart(ctx, {      
-        data: {
-          labels: ['MetPredict', 'NeoMatch'],
-          datasets: [
-            {data: [10, 10], label:'Count'}
-          ]
-        },
-        type: 'bar',
-        options: {        
-          responsive: true,
-          maintainAspectRatio: true,
-          indexAxis: 'x',
-          scales: {
-            y: {
-              title: {
-                display: true,
-                text: 'Number of Patients'
-              }
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Age'
-              }
-            }
-          },
-          plugins: {
-            tooltip: {            
-              callbacks: {
-                label: function(context) {
-                    let label = context.dataset.label || '';
-                    let value = context.formattedValue;
-                    return `${label}: ${value}`;
-                }
-              }
-            },
-          }
-        },
-      });
-    } else {
-      console.log("Element with id 'patientsByProjectBarChartCanvas' not found");
-    }
-  }
+  return createChart('patientsByProjectBarChartCanvas', {
+    type: 'bar',
+    labels: ['MetPredict', 'NeoMatch'],
+    data: [10, 10],
+    titleX: 'Project',
+    titleY: 'Number of Patients'
+  });
+}
 
-  export function initPatientsByAgeBarChart() {
-    const ctx = document.getElementById('patientsByAgeBarChartCanvas') as HTMLCanvasElement;  
-    if (ctx) {
-      new Chart(ctx, {      
-        data: {
-            labels: ['<30', '31-40', '41-50', '51-60', '>61'],
-            datasets: [
-              {data: [1, 1, 1, 1, 1], label: 'Count'}          
-            ]
-        },
-        type: 'bar',
-        options: {        
-          responsive: true,
-          maintainAspectRatio: true,
-          indexAxis: 'x',
-          scales: {
-            y: {
-              title: {
-                display: true,
-                text: 'Number of Patients'
-              }
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Age'
-              }
-            }
-          },
-          plugins: {
-            tooltip: {            
-              callbacks: {
-                label: function(context) {
-                    let label = context.dataset.label || '';
-                    let value = context.formattedValue;
-                    return `${label}: ${value}`;
-                }
-              }
-            },
-          }
-        },
-      });
-    } else {
-      console.log("Element with id 'patientsByAgeBarChartCanvas' not found");
-    }
-  }
-  
-  export function initOrganoidsByProjectBarChart() {
-    const ctx = document.getElementById('organoidsByProjectBarChartCanvas') as HTMLCanvasElement;  
-    if (ctx) {
-      new Chart(ctx, {      
-        data: {        
-          labels: ['NeoMatch', 'MetPredict'],
-          datasets: [
-            {data: [10, 10], label: 'Count'}
-          ]
-        },
-        type: 'bar',
-        options: {        
-          responsive: true,
-          maintainAspectRatio: true,
-          indexAxis: 'x',
-          scales: {
-            y: {
-              title: {
-                display: true,
-                text: 'Number of Organoids'
-              }
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Project'
-              }
-            }
-          },
-          plugins: {
-            tooltip: {            
-              callbacks: {
-                label: function(context) {
-                    let label = context.dataset.label || '';
-                    let value = context.formattedValue;
-                    return `${label}: ${value}`;
-                }
-              }
-            },
-          }
-        },
-      });
-    } else {
-      console.log("Element with id 'organoidsByProjectBarChartCanvas' not found");
-    }
-  }
-  
-  export function initPatientsByGenderPieChart() {
-    const ctx = document.getElementById('patientsByGenderPieChartCanvas') as HTMLCanvasElement;  
-    if (ctx) {
-      new Chart(ctx, {      
-        data: {        
-          labels: ['Male', 'Female'],
-          datasets: [
-            {data: [10, 10], label: 'Count'}
-          ]
-        },
-        type: 'pie',
-        options: {        
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            tooltip: {            
-              callbacks: {
-                label: function(context) {
-                    let label = context.dataset.label || '';
-                    let value = context.formattedValue;
-                    return `${label}: ${value}`;
-                }
-              }
-            },
-          }
-        },
-      });
-    } else {
-      console.log("Element with id 'patientsByGenderPieChartCanvas' not found");
-    }
-  }
-  
-  export function initOrganoidsByBiopsySitePieChart() {
-    const ctx = document.getElementById('organoidByBiopsySitePieChartCanvas') as HTMLCanvasElement;  
-    if (ctx) {
-      new Chart(ctx, {      
-        data: {
-          labels: ['Metastasis', 'untreated primary tumor', 'treated tumor'],
-          datasets: [
-            {data: [1, 1, 1], label: 'Count'}          
-          ]
-        },
-        type: 'pie',
-        options: {        
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            tooltip: {            
-              callbacks: {
-                label: function(context) {
-                    let label = context.dataset.label || '';
-                    let value = context.formattedValue;
-                    return `${label}: ${value}`;
-                }
-              }
-            },
-          }
-        },
-      });
-    } else {
-      console.log("Element with id 'organoidByBiopsySitePieChart' not found");
-    }
-  }
+export function initPatientsByAgeBarChart() {
+  return createChart('patientsByAgeBarChartCanvas', {
+    type: 'bar',
+    labels: ['<30', '31-40', '41-50', '51-60', '>61'],
+    data: [10, 10, 10, 10, 10],
+    titleX: 'Age',
+    titleY: 'Number of Patients'
+  });
+}
 
-  export function initMetPPatientsAfterPdoPieChart() {
-    const ctx = document.getElementById('metPPatientsAfterPdoPieChartCanvas') as HTMLCanvasElement;  
-    if (ctx) {
-      new Chart(ctx, {      
-        data: {
-          labels: ['after neoCX', 'before neoCX', 'before/after neoCX'],
-          datasets: [
-            {data: [1, 1, 1], label: 'Count'}          
-          ]
-        },
-        type: 'pie',
-        options: {        
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            tooltip: {            
-              callbacks: {
-                label: function(context) {
-                    let label = context.dataset.label || '';
-                    let value = context.formattedValue;
-                    return `${label}: ${value}`;
-                }
-              }
-            },
-          }
-        },
-      });
-    } else {
-      console.log("Element with id 'neoMPatientsByTherapyStatusPieChartCanvas' not found");
-    }
-  }
+export function initOrganoidsByProjectBarChart() {
+  return createChart('organoidsByProjectBarChartCanvas', {
+    type: 'bar',
+    labels: ['MetPredict', 'NeoMatch'],
+    data: [10, 10],
+    titleX: 'Project',
+    titleY: 'Number of Organoids'
+  });
+}
 
-  export function initNeoMPatientsByTherapyStatusPieChart() {
-    const ctx = document.getElementById('neoMPatientsByTherapyStatusPieChartCanvas') as HTMLCanvasElement;  
-    if (ctx) {
-      new Chart(ctx, {      
-        data: {
-          labels: ['after neoCX', 'before neoCX', 'before/after neoCX'],
-          datasets: [
-            {data: [1, 1, 1], label: 'Count'}          
-          ]
-        },
-        type: 'pie',
-        options: {        
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            tooltip: {            
-              callbacks: {
-                label: function(context) {
-                    let label = context.dataset.label || '';
-                    let value = context.formattedValue;
-                    return `${label}: ${value}`;
-                }
-              }
-            },
-          }
-        },
-      });
-    } else {
-      console.log("Element with id 'neoMPatientsByTherapyStatusPieChartCanvas' not found");
-    }
-  }
+export function initPatientsByGenderPieChart() {
+  return createChart('patientsByGenderPieChartCanvas', {
+    type: 'pie',
+    labels: ['Male', 'Female'],
+    data: [10, 10]
+  });
+}
+
+export function initOrganoidsByBiopsySitePieChart() {
+  return createChart('organoidByBiopsySitePieChartCanvas', {
+    type: 'pie',
+    labels: ['Metastasis', 'Untreated Primary Tumor', 'Treated Tumor'],
+    data: [1, 1, 1]
+  });
+}
+
+export function initMetPPatientsByPdosPieChart() {
+  return createChart('metPPatientsByPdosPieChartCanvas', {
+    type: 'pie',
+    labels: ['<=3 PDOs', '4 PDOs', '5 PDOs', '>5 PDOs'],
+    data: [1, 1, 1]
+  });
+}
+
+export function initNeoMPatientsByTherapyStatusPieChart() {
+  return createChart('neoMPatientsByTherapyStatusPieChartCanvas', {
+    type: 'pie',
+    labels: ['after neoCX', 'before neoCX', 'before/after neoCX'],
+    data: [1, 1, 1]
+  });
+}

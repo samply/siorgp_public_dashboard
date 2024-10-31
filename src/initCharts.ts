@@ -20,7 +20,7 @@ function createChart(canvasId: string, options: ChartOptions) {
     maintainAspectRatio: true,
     plugins: {
       legend: {
-        display: false
+        display: true
       },
       tooltip: {
         callbacks: {
@@ -36,6 +36,9 @@ function createChart(canvasId: string, options: ChartOptions) {
 
   if (options.type === 'bar') {
     chartOptions.indexAxis = 'x';
+    if (chartOptions.plugins && chartOptions.plugins.legend) {
+      chartOptions.plugins.legend.display = false;
+    }
     chartOptions.scales = {
       y: {
         title: {

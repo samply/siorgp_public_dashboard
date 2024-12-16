@@ -1,4 +1,5 @@
 import { Chart, ChartData, ChartOptions as ChartJsOptions } from 'chart.js';
+import { makeHtmlLegendPlugin } from './htmlLegendPlugin';
 
 interface ChartOptions {
   type: 'bar' | 'pie';
@@ -17,10 +18,10 @@ function createChart(canvasId: string, options: ChartOptions) {
 
   const chartOptions: ChartJsOptions = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: true
+        display: false,
       },
       tooltip: {
         callbacks: {
@@ -63,7 +64,8 @@ function createChart(canvasId: string, options: ChartOptions) {
         { data: options.data }
       ]
     },
-    options: chartOptions
+    options: chartOptions,
+    plugins: options.type === 'pie' ? [makeHtmlLegendPlugin(canvasId.replace('Canvas', 'Legend'))] : [],
   });
 }
 

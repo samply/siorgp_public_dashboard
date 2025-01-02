@@ -116,6 +116,14 @@ header h1 {
   background-color: var(--white);
 }
 
+/* Can be reused to style any container that should look like a card: white background, border with rounded corners */
+.card {
+  background-color: var(--white);
+  border: solid 1px var(--lightest-gray);
+  border-radius: var(--border-radius-small);
+  margin: var(--gap-xs);
+}
+
 #card1, #card2, #card3, #card4 {
   display: flex;
   flex-direction: column;
@@ -124,55 +132,6 @@ header h1 {
   text-align: center;
   border-radius: var(--border-radius-small);
   background-color: var(--white);
-}
-
-#dashWrapper {  
-  justify-items: center;
-  text-align: center;  
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-  grid-gap: var(--gap-s);
-  border-radius: var(--border-radius-small);    
-  padding: var(--gap-xs);
-  align-items: stretch;
-}
-
-.chartWrapper {
-  width: 100%;
-  border-radius: var(--border-radius-small);
-  border: solid 1px var(--lightest-gray);
-  background-color: var(--white);
-  align-items: center;
-  justify-content: center;
-}
-
-#chartsTopRow {    
-  display: grid;
-  justify-items: center;  
-  align-items: stretch;
-  grid-template-columns: 33% 33% 33%;   
-}
-
-#chartsBottomRow {  
-  display: grid;  
-  justify-items: center;
-  align-items: stretch;
-  grid-template-columns: repeat(4, 25%);  
-}
-
-.barChart, .pieChart {
-  width: 80%;
-  height: 100%;
-  background-color: var(--white);
-  /*
-  border-radius: var(--border-radius-small);    
-  border: solid 1px var(--lightest-gray);  
-  */
-}
-
-.barChart canvas, .pieChart canvas {
-  max-height: 400px;
-  width: 100%;
 }
 
 @media screen and (max-width: 1200px) {

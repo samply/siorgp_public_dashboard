@@ -53,41 +53,37 @@
             </div>
         </div>
     </div>
-    <!-- patient data bar chart -->
-    <div id="dashWrapper">
-        <div id="chartsTopRow" class="chartWrapper">
-            <div id="patientsByProjectBarChart" class="barChart">
-                <h4>Patients by Project</h4>
-                <canvas id="patientsByProjectBarChartCanvas"></canvas>
-            </div>
-            <div id="organoidsByProjectBarChart" class="barChart">
-                <h4>Organoids by Project</h4>
-                <canvas id="organoidsByProjectBarChartCanvas"></canvas>
-            </div>
-            <div id="patientsByAgeBarChart" class="barChart">
-                <h4>Patients Age Distribution</h4>
-                <canvas id="patientsByAgeBarChartCanvas"></canvas>
-            </div>                
-        </div>
-        <div id="chartsBottomRow" class="chartWrapper">
-            <div id="patientsByGenderPieChart" class="pieChart">
-                <h4>Patients by Gender</h4>
-                <canvas id="patientsByGenderPieChartCanvas"></canvas>
-            </div>
-            <div id="organoidByBiopsySitePieChart" class="pieChart">
-                <h4>Organoids by Biopsy Site</h4>
-                <canvas id="organoidByBiopsySitePieChartCanvas"></canvas>
-            </div>
-            <div id="metPPatientsByPdosPieChart" class="pieChart">
-                <h4>MetP Patients by PDOs</h4>
-                <canvas id="metPPatientsByPdosPieChartCanvas"></canvas>
-            </div>
-            <div id="neoMPatientsByTherapyStatusPieChart" class="pieChart">
-                <h4>NeoM Patients: PDOs by Therapy Status</h4>
-                <canvas id="neoMPatientsByTherapyStatusPieChartCanvas"></canvas>
-            </div>                
-        </div>      
-    </div>            
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-s); padding: var(--gap-s);" class="card">
+      <h4 style="text-align: center;">Patients by Project</h4>
+      <h4 style="text-align: center;">Organoids by Project</h4>
+      <h4 style="text-align: center;">Patients Age Distribution</h4>
+
+      <!-- For responsive charts, Charts.js requires a dedicated container for each canvas: https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note -->
+      <!-- The container requires `min-width: 0` if it is a flexbox item or CSS grid item: https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128 -->
+      <div style="min-width: 0;"><canvas id="patientsByProjectBarChartCanvas"></canvas></div>
+      <div style="min-width: 0;"><canvas id="organoidsByProjectBarChartCanvas"></canvas></div>
+      <div style="min-width: 0;"><canvas id="patientsByAgeBarChartCanvas"></canvas></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--gap-s); padding: var(--gap-s);" class="card">
+      <h4 style="text-align: center;">Patients by Gender</h4>
+      <h4 style="text-align: center;">Organoids by Biopsy Site</h4>
+      <h4 style="text-align: center;">MetP Patients by PDOs</h4>
+      <h4 style="text-align: center;">NeoM Patients: PDOs by Therapy Status</h4>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap-xs);" id="patientsByGenderPieChartLegend"></div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap-xs);" id="organoidByBiopsySitePieChartLegend"></div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap-xs);" id="metPPatientsByPdosPieChartLegend"></div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap-xs);" id="neoMPatientsByTherapyStatusPieChartLegend"></div>
+
+      <!-- For responsive charts, Charts.js requires a dedicated container for each canvas: https://www.chartjs.org/docs/latest/configuration/responsive.html#important-note -->
+      <!-- The container requires `min-width: 0` if it is a flexbox item or CSS grid item: https://github.com/chartjs/Chart.js/issues/4156#issuecomment-295180128 -->
+      <div style="min-width: 0;"><canvas id="patientsByGenderPieChartCanvas"></canvas></canvas></div>
+      <div style="min-width: 0;"><canvas id="organoidByBiopsySitePieChartCanvas"></canvas></div>
+      <div style="min-width: 0;"><canvas id="metPPatientsByPdosPieChartCanvas"></canvas></div>
+      <div style="min-width: 0;"><canvas id="neoMPatientsByTherapyStatusPieChartCanvas"></canvas></div>
+    </div>
   </main>
   <footer>
       <a

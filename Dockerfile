@@ -1,4 +1,4 @@
-FROM node:lts as build
+FROM node:lts AS build
 ARG TARGET_ENVIRONMENT="production"
 WORKDIR /usr/src/app
 RUN sh -c '[ -z "$http_proxy" ] || ( npm config set proxy $http_proxy; npm config set https-proxy $http_proxy )'
@@ -12,3 +12,10 @@ RUN npm run build
 FROM nginx:stable-alpine
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html/public
+
+# nginx conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY .htpasswd /etc/nginx/.htpasswd
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

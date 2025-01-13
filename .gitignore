@@ -3,3 +3,4 @@ node_modules
 .htpasswd
 remote-debug-profile
 .env
+dist

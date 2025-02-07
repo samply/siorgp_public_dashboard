@@ -1,7 +1,7 @@
 {
   "name": "siorgp_public_dashboard",
   "private": true,
-  "version": "1.0.5",
+  "version": "1.1.5",
   "type": "module",
   "scripts": {
     "build": "webpack",

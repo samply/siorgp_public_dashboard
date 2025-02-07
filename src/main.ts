@@ -145,7 +145,7 @@ function updateCardRow(crd: CardRowData) {
   const card4 = document.getElementById('card4');
 
   if (card1 && card2 && card3 && card4) {
-    card1.querySelector('h2')!.innerHTML = `<b>${crd.successfullSiteResponses}/6</b>`;
+    card1.querySelector('h2')!.innerHTML = `<b>${crd.successfullSiteResponses}/3</b>`;
     card2.querySelector('h2')!.innerHTML = `<b>${crd.nProjects}</b>`;
     card3.querySelector('h2')!.innerHTML = `<b>${crd.nPatients}</b>`;
     card4.querySelector('h2')!.innerHTML = `<b>${crd.nOrganoids}</b>`;
@@ -162,36 +162,22 @@ window.addEventListener('load', () => {
   //############################ query site data ###############################
   // Create a new Spot instance
   
-  //const url = new URL('https://organoid.ccp-it.dktk.dkfz.de/prod/');
-  const url = new URL('http://localhost:8055');
-  //const sites = ['dresden', 'dresden-test', 'muenchen-tum'];  
-  const sites = ['david-scholz-dev'];  
-  
-  //MetPredict query
-  const spot1 = new Spot(url, sites);
-  const payload1 = JSON.stringify({ payload: "SIORGP_PUBLIC_METPREDICT" });
-  const metpredict_query = btoa(payload1);
+  const url = new URL('https://organoid.ccp-it.dktk.dkfz.de/prod/');
+  const sites = ['dresden', 'dresden-test', 'muenchen-tum'];
+  const spot = new Spot(url, sites);
+
+  const payload = JSON.stringify({ payload: "SIORGP_PUBLIC_MAIN" });
+  const query = btoa(payload);
+
   // Create an AbortController to cancel the request if needed
-  const controller1 = new AbortController();
+  const controller = new AbortController();
 
-  spot1.send(metpredict_query, controller1).then(() => {
-    console.log('MetPredict query sent');
+  // Send the query
+  spot.send(query, controller).then(() => {
+    console.log('Query sent');
   }).catch((err) => {
-    console.error('Error sending MetPredict query:', err);
+    console.error('Error sending query:', err);
   }); 
-
-  // NeoMatch query
-  const spot2 = new Spot(url, sites);
-  const payload2 = JSON.stringify({ payload: "SIORGP_PUBLIC_NEOMATCH" });
-  const neomatch_query = btoa(payload2);  
-  const controller2 = new AbortController();
-
-  spot2.send(neomatch_query, controller2).then(() => {
-    console.log('NeoMatch query sent');
-  }).catch((err) => {
-    console.error('Error sending NeoMatch query:', err);
-  }); 
-
 });
 
 export function updateDashboard(res_map: Map<string, number | string>) {

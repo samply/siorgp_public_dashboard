@@ -126,7 +126,7 @@ export function initMetPPatientsByPdosPieChart() {
 export function initNeoMPatientsByTherapyStatusPieChart() {
   return createChart('neoMPatientsByTherapyStatusPieChartCanvas', {
     type: 'pie',
-    labels: ['after neoCX', 'before neoCX', 'before/after neoCX'],
+    labels: ['after neoCX', 'before neoCX', 'before & after neoCX'],
     data: [1, 1, 1]
   });
 }

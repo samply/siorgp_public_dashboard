@@ -162,11 +162,8 @@ window.addEventListener('load', () => {
   //############################ query site data ###############################
   // Create a new Spot instance
   
-  //const url = new URL('https://organoid.ccp-it.dktk.dkfz.de/prod/');
-  //const sites = ['dresden', 'dresden-test', 'muenchen-tum'];
-
-  const url = new URL('http://localhost:8055');
-  const sites = ['dresden'];
+  const url = new URL('https://organoid.ccp-it.dktk.dkfz.de/prod/');
+  const sites = ['dresden', 'dresden-test', 'muenchen-tum'];
 
   //MetPredict query
   const spot1 = new Spot(url, sites);

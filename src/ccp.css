@@ -134,6 +134,28 @@ header h1 {
   background-color: var(--white);
 }
 
+.info-icon {
+  width: 1em;
+  height: 1em;
+  margin-left: 8px;
+  cursor: help;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 4px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.info-icon:hover + .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
 @media screen and (max-width: 1200px) {
   .charts {
     grid-template-columns: repeat(3, 1fr);

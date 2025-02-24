@@ -33,11 +33,17 @@ interface CData {
   }[];
 }
 
-function objectToChartData(obj: object): CData {
+function updateChartData(chart: Chart, obj: object, colors: string[]) {
   const labels = Object.keys(obj);
   const data = Object.values(obj);
 
-  return {
+  // If all data points are 0 (that means a pie chart wouldn't render at all),
+  // don't update the chart and instead keep the gray chart from initialization.
+  if (data.every(d => d === 0)) {
+    return;
+  }
+
+  chart.data = {
     labels,
     datasets: [
       {
@@ -45,6 +51,8 @@ function objectToChartData(obj: object): CData {
       },
     ],
   };
+  chart.data.datasets[0].backgroundColor = colors;
+  chart.update();
 }
 
 let patientsByProjectBarChart: Chart<keyof ChartTypeRegistry, number[], string> | null;
@@ -211,12 +219,14 @@ export function updateDashboard(res_map: Map<string, number | string>) {
     patientsByProject.NeoMatch += Number(res_map.get("n_patients") ?? 0);
   }
   if (patientsByProjectBarChart) {
-    patientsByProjectBarChart.data = objectToChartData(patientsByProject);
-    patientsByProjectBarChart.data.datasets[0].backgroundColor = [
+    updateChartData(
+      patientsByProjectBarChart,
+      patientsByProject,
+      [
       colors.lightBlue, // color for MetPredict
       colors.lightGreen, // color for NeoMatch
-    ];
-    patientsByProjectBarChart.update();
+      ],
+    );
   }
 
   //update organoidsByProject
@@ -226,12 +236,14 @@ export function updateDashboard(res_map: Map<string, number | string>) {
     organoidsByProject.NeoMatch += Number(res_map.get("n_organoids") ?? 0);
   }
   if (organoidsByProjectBarChart) {    
-    organoidsByProjectBarChart.data = objectToChartData(organoidsByProject);
-    organoidsByProjectBarChart.data.datasets[0].backgroundColor = [
+    updateChartData(
+      organoidsByProjectBarChart,
+      organoidsByProject,
+      [
       colors.lightBlue, // color for MetPredict
       colors.lightGreen, // color for NeoMatch
-    ];
-    organoidsByProjectBarChart.update();
+      ],
+    );
   }
 
   //update patientsByAge 
@@ -242,15 +254,11 @@ export function updateDashboard(res_map: Map<string, number | string>) {
   patientsByAge['>=61'] += Number(res_map.get(">=61") ?? 0);
 
   if (patientsByAgeBarChart) {
-    patientsByAgeBarChart.data = objectToChartData(patientsByAge);;
-    patientsByAgeBarChart.data.datasets[0].backgroundColor = [
-      colors.blue, 
-      colors.green,
-      colors.orange,
-      colors.red,
-      colors.gray
-    ]
-    patientsByAgeBarChart.update();
+    updateChartData(
+      patientsByAgeBarChart,
+      patientsByAge,
+      [colors.blue, colors.green, colors.orange, colors.red, colors.gray],
+    );
   }
 
   //update patientsByGender
@@ -258,12 +266,11 @@ export function updateDashboard(res_map: Map<string, number | string>) {
   patientsByGender.Male += Number(res_map.get("gender_male") ?? 0);
 
   if (patientsByGenderPieChart) {
-    patientsByGenderPieChart.data = objectToChartData(patientsByGender);
-    patientsByGenderPieChart.data.datasets[0].backgroundColor = [
-      colors.blue,
-      colors.green,
-    ]
-    patientsByGenderPieChart.update();
+    updateChartData(
+      patientsByGenderPieChart,
+      patientsByGender,
+      [colors.blue, colors.green],
+    );
   }
 
 
@@ -273,13 +280,11 @@ export function updateDashboard(res_map: Map<string, number | string>) {
     organoidsByBiopsySite.Metastasis += Number(res_map.get("n_organoids") ?? 0);
   }
   if (organoidsByBiopsySitePieChart) {
-    organoidsByBiopsySitePieChart.data = objectToChartData(organoidsByBiopsySite);;
-    organoidsByBiopsySitePieChart.data.datasets[0].backgroundColor = [
-      colors.blue, 
-      colors.green,
-      colors.orange
-    ]
-    organoidsByBiopsySitePieChart.update();
+    updateChartData(
+      organoidsByBiopsySitePieChart,
+      organoidsByBiopsySite,
+      [colors.blue, colors.green, colors.orange],
+    );
   }
   
   //update metPPatientsByPDOs
@@ -289,15 +294,11 @@ export function updateDashboard(res_map: Map<string, number | string>) {
   metPPatientsByPdos["pat_pdos_gt_5"] += Number(res_map.get("pat_pdos_gt_5") ?? 0); 
 
   if (metPPatientsByPdosPieChart) {
-    metPPatientsByPdosPieChart.data = objectToChartData(metPPatientsByPdos);
-    metPPatientsByPdosPieChart.data.labels = ['<=3 PDOs', '4 PDOs', '5 PDOs', '>5 PDOs'];
-    metPPatientsByPdosPieChart.data.datasets[0].backgroundColor = [
-      colors.blue, 
-      colors.green,
-      colors.orange,
-      colors.gray
-    ]
-    metPPatientsByPdosPieChart.update();
+    updateChartData(
+      metPPatientsByPdosPieChart,
+      metPPatientsByPdos,
+      [colors.blue, colors.green, colors.orange, colors.gray],
+    );
   }
   //@todo: add neoMPatientsByTherapyStatus
 }

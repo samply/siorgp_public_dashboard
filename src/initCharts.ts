@@ -119,7 +119,7 @@ export function initMetPPatientsByPdosPieChart() {
   return createChart('metPPatientsByPdosPieChartCanvas', {
     type: 'pie',
     labels: ['<=3 PDOs', '4 PDOs', '5 PDOs', '>5 PDOs'],
-    data: [1, 1, 1]
+    data: [1, 1, 1, 1]
   });
 }
 

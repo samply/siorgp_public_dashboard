@@ -6,8 +6,17 @@
     <link rel="icon" type="image/x-icon" href="images/favicon-dktk.png">
     <link rel="stylesheet" href="ccp.css">
     <title>DKTK Organoid Platform - Dashboard</title>
+    <script type="module" src="bundle.js"></script>
   </head>
   <body>
+    <!-- is changed to `display: flex` by JS if user has not given consent -->
+    <div id="consentPopup" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(53, 53, 53, 0.8); z-index: 2; display: none; align-items: center; justify-content: center;">
+      <div style="padding: var(--gap-s); min-width: 20rem;" class="card">
+        <p><a href="#">Read this</a></p>
+        <p><button id="consentButton">Consent</button></p>
+      </div>
+    </div>
+
     <header>
       <div class="header-wrapper">
           <div class="logo">
@@ -110,6 +119,5 @@
       >
       <a class="email" href="mailto:CCP@dkfz.de">Kontakt</a>
   </footer>
-    <script type="module" src="bundle.js"></script>
   </body>
 </html>

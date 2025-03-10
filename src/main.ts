@@ -158,13 +158,7 @@ function updateCardRow(crd: CardRowData) {
   numOrganoidsSpan.innerText = crd.nOrganoids.toString();
 }
 
-window.addEventListener('load', () => {  
-  Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip,
-    PieController, ArcElement, Legend
-  );  
-  initBlank();
-
-
+function sendQuery() {  
   //############################ query site data ###############################
   // Create a new Spot instance
   
@@ -198,7 +192,7 @@ window.addEventListener('load', () => {
     console.error('Error sending NeoMatch query:', err);
   }); 
 
-});
+}
 
 export function updateDashboard(res_map: Map<string, number | string>) {
   console.log(res_map);
@@ -302,3 +296,23 @@ export function updateDashboard(res_map: Map<string, number | string>) {
   }
   //@todo: add neoMPatientsByTherapyStatus
 }
+
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip,
+  PieController, ArcElement, Legend
+);  
+initBlank();
+
+const consentPopup = document.getElementById("consentPopup")!;
+const consentButton = document.getElementById("consentButton")!;
+
+if (localStorage.getItem("hasGivenConsent") === "true") {
+  sendQuery();
+} else {
+  consentPopup.style.display = "flex";
+}
+
+consentButton.onclick = () => {
+  localStorage.setItem("hasGivenConsent", "true");
+  consentPopup.style.display = "none";
+  sendQuery();
+};

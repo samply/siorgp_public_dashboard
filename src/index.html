@@ -23,37 +23,26 @@
       </div>
   </header>
   <main>
-    <div id="site-status-wrapper">
-        
-    </div>
     <!-- cards row -->
-    <div class="cards-grid-container">
-        <div id="card1">
-            <div>
-                <h4>Successful Site Responses 
-                    <img class="info-icon" alt="" title="number of sites for which all queries were run successfully" src="images/info-circle-svgrepo-com.svg"></img>
-                </h4>
-                <h2><b>0/3</b></h2>
-            </div>
-        </div>
-        <div id="card2">
-            <div>
-                <h4>Projects</h4>
-                <h2><b>0</b></h2>
-            </div>
-        </div>
-        <div id="card3">
-            <div>
-                <h4>Patients</h4>
-                <h2><b>0</b></h2>
-            </div>
-        </div>
-        <div id="card4">
-            <div>
-                <h4>Organoids</h4>
-                <h2><b>0</b></h2>
-            </div>
-        </div>
+    <div style="display: flex; justify-content: space-around; gap: var(--gap-s); padding: var(--gap-s);" class="card">
+      <div>
+        Sites
+        <img class="info-icon" alt="" title="Number of sites providing data" src="images/info-circle-svgrepo-com.svg"></img>
+        <span id="numResponses">0</span>/3
+      </div>
+      <div>
+        Projects
+        <img class="info-icon" alt="" title="For more details visit DKTK Organoid Platform & Projects (link in footer)" src="images/info-circle-svgrepo-com.svg"></img>
+        <span id="numProjects">0</span>
+      </div>
+      <div>
+        Patients
+        <span id="numPatients">0</span>
+      </div>
+      <div>
+        Organoids
+        <span id="numOrganoids">0</span>
+      </div>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-s); padding: var(--gap-s);" class="card">

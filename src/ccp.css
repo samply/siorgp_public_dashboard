@@ -105,17 +105,6 @@ header h1 {
   margin: 0;
 }
 
-.cards-grid-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: var(--gap-s);
-  padding: var(--gap-xs);
-  margin: 0 var(--gap-xs);
-  border-radius: var(--border-radius-small);
-  border: solid 1px var(--lightest-gray);
-  background-color: var(--white);
-}
-
 /* Can be reused to style any container that should look like a card: white background, border with rounded corners */
 .card {
   background-color: var(--white);
@@ -124,20 +113,10 @@ header h1 {
   margin: var(--gap-xs);
 }
 
-#card1, #card2, #card3, #card4 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-radius: var(--border-radius-small);
-  background-color: var(--white);
-}
-
 .info-icon {
   width: 1em;
   height: 1em;
-  margin-left: 8px;
+  margin: 0 4px;
   cursor: help;
 }
 

@@ -147,17 +147,15 @@ function initBlank() {
 }
 
 function updateCardRow(crd: CardRowData) {
-  const card1 = document.getElementById('card1');
-  const card2 = document.getElementById('card2');
-  const card3 = document.getElementById('card3');
-  const card4 = document.getElementById('card4');
+  const numResponsesSpan = document.getElementById('numResponses')!;
+  const numProjectsSpan = document.getElementById('numProjects')!;
+  const numPatientsSpan = document.getElementById('numPatients')!;
+  const numOrganoidsSpan = document.getElementById('numOrganoids')!;
 
-  if (card1 && card2 && card3 && card4) {
-    card1.querySelector('h2')!.innerHTML = `<b>${Math.floor(crd.successfullSiteResponses/2)}/3</b>`;
-    card2.querySelector('h2')!.innerHTML = `<b>${crd.nProjects}</b>`;
-    card3.querySelector('h2')!.innerHTML = `<b>${crd.nPatients}</b>`;
-    card4.querySelector('h2')!.innerHTML = `<b>${crd.nOrganoids}</b>`;
-  }
+  numResponsesSpan.innerText = crd.successfullSiteResponses.toString();
+  numProjectsSpan.innerText = crd.nProjects.toString();
+  numPatientsSpan.innerText = crd.nPatients.toString();
+  numOrganoidsSpan.innerText = crd.nOrganoids.toString();
 }
 
 window.addEventListener('load', () => {  
@@ -170,8 +168,10 @@ window.addEventListener('load', () => {
   //############################ query site data ###############################
   // Create a new Spot instance
   
-  const url = new URL('https://organoid.ccp-it.dktk.dkfz.de/prod/');
-  const sites = ['dresden', 'dresden-test', 'muenchen-tum'];
+  // const url = new URL('https://organoid.ccp-it.dktk.dkfz.de/prod/');
+  // const sites = ['dresden', 'dresden-test', 'muenchen-tum'];
+  const url = new URL('http://localhost:8055/');
+  const sites = ['dev-tim'];
 
   //MetPredict query
   const spot1 = new Spot(url, sites);
@@ -223,8 +223,8 @@ export function updateDashboard(res_map: Map<string, number | string>) {
       patientsByProjectBarChart,
       patientsByProject,
       [
-      colors.lightBlue, // color for MetPredict
-      colors.lightGreen, // color for NeoMatch
+        colors.lightBlue, // color for MetPredict
+        colors.lightGreen, // color for NeoMatch
       ],
     );
   }
@@ -235,13 +235,13 @@ export function updateDashboard(res_map: Map<string, number | string>) {
   } else if (project == "NeoMatch") {
     organoidsByProject.NeoMatch += Number(res_map.get("n_organoids") ?? 0);
   }
-  if (organoidsByProjectBarChart) {    
+  if (organoidsByProjectBarChart) {
     updateChartData(
       organoidsByProjectBarChart,
       organoidsByProject,
       [
-      colors.lightBlue, // color for MetPredict
-      colors.lightGreen, // color for NeoMatch
+        colors.lightBlue, // color for MetPredict
+        colors.lightGreen, // color for NeoMatch
       ],
     );
   }

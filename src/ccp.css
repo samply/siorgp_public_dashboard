@@ -135,6 +135,30 @@ header h1 {
   opacity: 1;
 }
 
+.document-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.document-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #007bff; /* Adjust color as needed */
+  font-weight: bold;
+}
+
+.document-link:hover {
+  text-decoration: underline;
+}
+
+.pdf-icon {
+  width: 4rem;
+  height: 4rem;
+  margin-right: 0.5rem;
+}
+
 @media screen and (max-width: 1200px) {
   .charts {
     grid-template-columns: repeat(3, 1fr);

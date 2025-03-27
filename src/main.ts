@@ -110,10 +110,10 @@ let patientsByGender = {
 }
 
 let metPPatientsByPdos = {
-  "pat_pdos_leq_3": 0,
-  "pat_pdos_4": 0,
-  "pat_pdos_5": 0,
-  "pat_pdos_gt_5": 0
+  "<=3 PDOs": 0,
+  "4 PDOs": 0,
+  "5 PDOs": 0,
+  ">5 PDOs": 0
 }
 
 /*
@@ -282,10 +282,10 @@ export function updateDashboard(res_map: Map<string, number | string>) {
   }
   
   //update metPPatientsByPDOs
-  metPPatientsByPdos["pat_pdos_leq_3"] += Number(res_map.get("pat_pdos_leq_3") ?? 0); 
-  metPPatientsByPdos["pat_pdos_4"] += Number(res_map.get("pat_pdos_4") ?? 0); 
-  metPPatientsByPdos["pat_pdos_5"] += Number(res_map.get("pat_pdos_5") ?? 0); 
-  metPPatientsByPdos["pat_pdos_gt_5"] += Number(res_map.get("pat_pdos_gt_5") ?? 0); 
+  metPPatientsByPdos["<=3 PDOs"] += Number(res_map.get("pat_pdos_leq_3") ?? 0); 
+  metPPatientsByPdos["4 PDOs"] += Number(res_map.get("pat_pdos_4") ?? 0); 
+  metPPatientsByPdos["5 PDOs"] += Number(res_map.get("pat_pdos_5") ?? 0); 
+  metPPatientsByPdos[">5 PDOs"] += Number(res_map.get("pat_pdos_gt_5") ?? 0); 
 
   if (metPPatientsByPdosPieChart) {
     updateChartData(
@@ -303,7 +303,8 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip,
 initBlank();
 
 const consentPopup = document.getElementById("consentPopup")!;
-const consentButton = document.getElementById("consentButton")!;
+const consentButton = document.getElementById("consentButton") as HTMLButtonElement;
+const consentCheckbox = document.getElementById("consentCheckbox") as HTMLInputElement;
 
 if (localStorage.getItem("hasGivenConsent") === "true") {
   sendQuery();
@@ -316,3 +317,10 @@ consentButton.onclick = () => {
   consentPopup.style.display = "none";
   sendQuery();
 };
+
+consentCheckbox.onchange = () => {
+  consentButton.disabled = !consentCheckbox.checked;
+};
+
+// Initialize the button state based on the checkbox
+consentButton.disabled = !consentCheckbox.checked;

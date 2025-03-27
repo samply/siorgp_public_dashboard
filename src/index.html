@@ -11,9 +11,23 @@
   <body>
     <!-- is changed to `display: flex` by JS if user has not given consent -->
     <div id="consentPopup" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(53, 53, 53, 0.8); z-index: 2; display: none; align-items: center; justify-content: center;">
-      <div style="padding: var(--gap-s); min-width: 20rem;" class="card">
-        <p><a href="#">Read this</a></p>
-        <p><button id="consentButton">Consent</button></p>
+      <div style="padding: var(--gap-s); max-width: 35rem;" class="card">
+        <p>Bitte nehmen Sie vor der Nutzung die Nutzungsvereinbarung und Datenschutzerklärung zur Kenntnis:</p>
+        <div class="document-links">
+          <a href="https://hub.dkfz.de/s/7CToZ529ZWoNLGo" class="document-link">
+            <img src="images/pdf-icon.svg" alt="PDF Icon" class="pdf-icon" />
+            Nutzungsvereinbarung
+          </a>
+          <a href="https://hub.dkfz.de/s/CEAstywLAtGFPDi" class="document-link">
+            <img src="images/pdf-icon.svg" alt="PDF Icon" class="pdf-icon" />
+            Datenschutzerklärung
+          </a>
+        </div>
+        <p>
+          <input type="checkbox" id="consentCheckbox" />
+          <label for="consentCheckbox">Hiermit bestätige ich, dass ich die Nutzungsvereinbarung und Datenschutzerklärung in ihrer aktuell gültigen Version gelesen habe und mit diesen einverstanden bin.</label>
+        </p>
+        <p><button id="consentButton" style="width: 100%">Weiter zum DKTK Organoid Platform – Dashboard</button></p>
       </div>
     </div>
 
@@ -98,13 +112,13 @@
       >
       <a
           class="user-agreement"
-          href=""
+          href="https://hub.dkfz.de/s/7CToZ529ZWoNLGo"
           download="nutzervereinbarung"
           target="_blank">Nutzungsvereinbarung</a
       >
       <a
           class="privacy-policy"
-          href=""
+          href="https://hub.dkfz.de/s/CEAstywLAtGFPDi"
           download="datenschutzerklaerung"
           target="_blank">Datenschutz</a
       >

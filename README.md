@@ -1,2 +1,1 @@
-# siorgp_public_dashboard
-A public dashboard for the Organoid platform
+Development moved to https://github.com/samply/organoid-dashboard
